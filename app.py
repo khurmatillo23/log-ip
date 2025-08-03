@@ -17,11 +17,14 @@ def send_telegram_message(link, ip):
 
 @app.route("/<path:target_url>")
 def redirect_user(target_url):
+    if target_url.endswith("favicon.ico"):
+        return "", 204
     if not target_url:
         return "Missing 'url' query parameter", 400
     decoded_url = urllib.parse.unquote(target_url)
 
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    forwarded_for = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_ip = forwarded_for.split(",")[0].strip()
 
     print("here")
     send_telegram_message(decoded_url, user_ip)
