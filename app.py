@@ -5,11 +5,14 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from datetime import datetime
+import time
 
 app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
+
+last_sent = {}
 
 def send_telegram_message(link, ip, port):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
